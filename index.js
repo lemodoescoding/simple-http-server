@@ -13,14 +13,20 @@ myEmitter.on("log", (message, filename) => {
 });
 
 const serveFile = async (filepath, contentType, res) => {
+  const name = "yeyey";
+
   try {
     const rawData = await fsPromises.readFile(
       filepath,
       !contentType.includes("image") ? "utf8" : "",
     );
 
-    const data =
+    let data =
       contentType === "application/json" ? JSON.parse(rawData) : rawData;
+
+    if (contentType === "text/html") {
+      data = data.replaceAll("{{name}}", name);
+    }
 
     res.writeHead(200, { "Content-Type": contentType });
 
